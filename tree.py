@@ -76,9 +76,9 @@ def app():
                 st.markdown(f"**Autor:** {row['AUTOR']}")
                 st.markdown(f"**Disciplina:** {row['DISCIPLINA']}")
                 st.markdown(f"**Série:** {row['SÉRIE']}")
-                st.markdown(f"**Disponível:** {row['DISPONÍVEL']}"
-                st.markdown(f"**Comentário/Sugestão:** {row['COMENTÁRIO']}"
-                st.markdown(f"**Série:** {row['SÉRIE']}"
+                st.markdown(f"**Disponível:** {row['DISPONÍVEL']}")
+                st.markdown(f"**Comentário/Sugestão:** {row['COMENTÁRIO']}")
+                st.markdown(f"**Série:** {row['SÉRIE']}")
                 st.markdown(f"**Link:** {row['LINK']}")
                 st.markdown("---")
     else:
