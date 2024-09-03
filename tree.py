@@ -5,6 +5,8 @@ def app():
     st.image('logo-arvore.svg')
     st.header('Galeria de Livros')
     st.subheader('Aqui você encontra todos os livros disponíveis mapeados com seu sistema de ensino.')
+    st.divider()
+
     df = pd.read_excel('dados.xlsx', sheet_name='TODOS OS VOLUMES')
 
     col1, col2 = st.columns(2)
@@ -54,6 +56,8 @@ def app():
     if serie_input:
         df = df[df['SÉRIE'].isin(serie_input)]
 
+    st.divider()
+
     # Exibir os resultados em formato de card
     if not df.empty:
         cols = st.columns(4)
@@ -64,6 +68,7 @@ def app():
                 st.markdown(f"**Disciplina:** {row['DISCIPLINA']}")
                 st.markdown(f"**Série:** {row['SÉRIE']}")
                 st.markdown(f"**Comentário:** {row['COMENTÁRIO']}")
+                st.markdown(f"**Acesse:** {row['LINK']}")
                 st.markdown("---")
     else:
         st.markdown("Nenhum resultado encontrado para os filtros aplicados.")
