@@ -46,23 +46,8 @@ def check_password():
 
 if check_password():
     buffer = io.BytesIO()
-
-    with st.sidebar:        
-        app = option_menu(
-            menu_title='Galeria de livros ',
-            options=['Árvore'],
-            icons=['folder-fill'],
-            menu_icon='book-fill',
-            default_index=0,
-            styles={
-                "container": {"padding": "5!important"},
-                "icon": { "font-size": "16px"}, 
-                "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#F7EFE5"},
-                "nav-link-selected": {"background-color": "blue"},}
-            )
-            
-    if app == "Árvore":
-        tree.app()
+    
+    tree.app()
 
     
     
