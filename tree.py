@@ -60,9 +60,13 @@ def app():
 
     # Exibir os resultados em formato de card
     if not df.empty:
-        cols = st.columns(4)
+        # Determinar o número de colunas necessário baseado no número de resultados
+        num_results = len(df)
+        num_cols = min(4, num_results)  # Limita a 4 colunas no máximo
+        cols = st.columns(num_cols)  # Cria o layout dinâmico de colunas
+        
         for index, row in df.iterrows():
-            with cols[index % 4]:
+            with cols[index % num_cols]:  # Distribui os cards nas colunas criadas
                 st.image(f"{row['IMAGE']}")
                 st.markdown(f"### {row['TÍTULO']}")
                 st.markdown(f"**Autor:** {row['AUTOR']}")
@@ -70,8 +74,7 @@ def app():
                 st.markdown(f"**Série:** {row['SÉRIE']}")
                 st.markdown(f"**Disponível:** {row['DISPONÍVEL']}")
                 st.markdown(f"**Sugestão:** {row['COMENTÁRIO']}")
-                # Botão que leva ao link
-                # Botão que leva ao link
+             
                 link = row['LINK']
                 button_label = f"Acesse: {row['TÍTULO']}"
                 button_html = f'<a href="{link}" target="_blank"><button style="background-color: #5353ec; color: white; padding: 10px 20px; border: none; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; border-radius: 4px;">{button_label}</button></a>'
