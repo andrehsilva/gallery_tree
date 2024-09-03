@@ -71,10 +71,12 @@ def app():
                 st.markdown(f"**Disponível:** {row['DISPONÍVEL']}")
                 st.markdown(f"**Sugestão:** {row['COMENTÁRIO']}")
                 # Botão que leva ao link
+                # Botão que leva ao link
+                link = row['LINK']
                 button_label = f"Acesse: {row['TÍTULO']}"
-                if st.button(button_label, key=f"link_button_{index}"):
-                    st.write(f"[{button_label}]({row['LINK']})", unsafe_allow_html=True)
-                
+                button_html = f'<a href="{link}" target="_blank"><button style="background-color: #5353ec; color: white; padding: 10px 20px; border: none; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; border-radius: 4px;">{button_label}</button></a>'
+                st.markdown(button_html, unsafe_allow_html=True)
+
                 st.markdown("---")
     else:
         st.markdown("Nenhum resultado encontrado para os filtros aplicados.")
