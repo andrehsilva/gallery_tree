@@ -63,6 +63,7 @@ def app():
         cols = st.columns(4)
         for index, row in df.iterrows():
             with cols[index % 4]:
+                st.image(f"{row['IMAGE']}")
                 st.markdown(f"### {row['TÍTULO']}")
                 st.markdown(f"**Autor:** {row['AUTOR']}")
                 st.markdown(f"**Disciplina:** {row['DISCIPLINA']}")
