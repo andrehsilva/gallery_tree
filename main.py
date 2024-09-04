@@ -4,7 +4,7 @@ from streamlit_modal import Modal
 
 import io
 
-st.set_page_config(page_title="Árvore de Livros & AZ",page_icon="⭐",layout="wide")
+st.set_page_config(page_title="Árvore de Livros & AZ",page_icon="📚",layout="wide")
 
 st.markdown("""
     <style>
@@ -110,7 +110,6 @@ if not page_data.empty:
             <p style="margin: 5px 0;"><strong>Autor:</strong> {row['AUTOR']}</p>
             <p style="margin: 5px 0;"><strong>{row['DISCIPLINA']} | {row['SÉRIE']} | Volume: {row['VOLUME/PROJETO']}</strong></p>
             <p style="margin: 5px 0;"><strong>Disponível:</strong> {row['DISPONÍVEL NA ÁRVORE']}</p>
-    
             """
             # Adicionar sugestão de livro, se houver
             if pd.notna(row['SUGESTÃO DE LIVRO']) and row['SUGESTÃO DE LIVRO'].strip():
