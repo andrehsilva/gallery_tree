@@ -17,13 +17,13 @@ def app():
 
     # Filtro composto por TÍTULO (multi-seleção)
     titulo_input = col1.multiselect(
-        "Selecione um ou mais TÍTULOS:", placeholder="Escolha uma opção",
+        "Selecione um ou mais títulos:", placeholder="Escolha uma opção",
         options=sorted(df['TÍTULO'].unique())  # Ordena os títulos
     )
 
     # Filtro composto por AUTOR (multi-seleção) - desabilitado se o filtro de TÍTULO estiver ativo
     volume_input = col2.multiselect(
-        "Selecione um ou mais Volumes:", placeholder="Escolha uma opção",
+        "Selecione um ou mais volumes:", placeholder="Escolha uma opção",
         options=sorted(df['VOLUME/PROJETO'].unique())
     ) if not titulo_input else col2.selectbox(
         "Filtro de VOLUME/PROJETO desabilitado devido à seleção de TÍTULO",
@@ -34,7 +34,7 @@ def app():
 
     # Filtro composto por DISCIPLINA (multi-seleção)
     disciplina_input = col3.multiselect(
-        "Selecione uma ou mais DISCIPLINAS:", placeholder="Escolha uma opção",
+        "Selecione uma ou mais disciplinas:", placeholder="Escolha uma opção",
         options=sorted(df['DISCIPLINA'].unique())  # Ordena as disciplinas
     ) if not (titulo_input or volume_input) else col3.selectbox(
         "Filtro de DISCIPLINA desabilitado devido à seleção de TÍTULO ou VOLUME/PROJETO", 
@@ -43,7 +43,7 @@ def app():
 
     # Filtro composto por SÉRIE (multi-seleção)
     serie_input = col4.multiselect(
-        "Selecione uma ou mais SÉRIES:", placeholder="Escolha uma opção",
+        "Selecione uma ou mais séries:", placeholder="Escolha uma opção",
         options=df['SÉRIE'].unique()
     ) if not (titulo_input or volume_input) else col4.selectbox(
         "Filtro de SÉRIE desabilitado devido à seleção de TÍTULO ou VOLUME/PROJETO",
@@ -104,13 +104,13 @@ def app():
 
                 # Adicionar botão com o link do livro
                 if row['DISPONÍVEL NA ÁRVORE'] == 'Sim':
-                    cor = "#2b961f"
+                    cor = "#45d0c1"   
                     texto_cor = "white"
                 elif row['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar sugestão':
-                    cor = "#0000ff"
+                    cor = "#b36848"
                     texto_cor = "white"
                 elif row['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar obra indicada no material AZ':
-                    cor = "#e5e619"
+                    cor = "#fdc311"
                     texto_cor = "black"
                 
                 link = row['LINK DO LIVRO']
