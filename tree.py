@@ -1,14 +1,30 @@
 import streamlit as st
 import pandas as pd
+from streamlit_modal import Modal
 
 def app():
-    #st.image('logo-arvore.svg')
+    #st.snow()
+    # st.image('logo-arvore.svg')
     st.logo('logo.png')
+
+    col1, col2, col3, col4 = st.columns(4)
+    # Cria um modal com o título
+    modal = Modal(key="video_modal", title="Aprenda a encontrar livros mapeados na Árvore & AZ")
+    
+    # Botão para abrir o modal
+    if col1.button("**Clique aqui para aprender!**"):
+        modal.open()
+    
+    # Conteúdo do modal
+    if modal.is_open():
+        with modal.container():
+            st.video("arvore.mp4")
+
     st.header('Mapeamento de Livros Árvore & AZ')
     st.subheader('Explore uma coleção completa de livros mapeados com o seu sistema de ensino AZ.')
     
-    st.divider()
     
+    #st.divider()
  
 
     df = pd.read_excel('dados.xlsx', sheet_name='TODOS OS VOLUMES')
@@ -89,13 +105,13 @@ def app():
             with cols[index % num_cols]:  # Distribui os cards nas colunas criadas
                 # Construir o HTML do card
                 card_html = f"""
-                <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-bottom: 10px; height: 620px; text-align: center;">
-                    <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto;"/>
-                    <p></p>
-                    <h4 style="color:#494c4e; ">{row['TÍTULO']}</h4>
-                    <p><strong>Autor:</strong> {row['AUTOR']}</p>
-                    <p><strong> {row['DISCIPLINA']} | {row['SÉRIE']}<strong> | Volume:{row['VOLUME/PROJETO']}</strong> </p>
-                    <p><strong>Disponível:</strong> {row['DISPONÍVEL NA ÁRVORE']}</p>
+                <div style="border: 1px solid #ddd; padding: 5px; border-radius: 5px; margin-bottom: 2px; margin-top: 2px; height: 620px; text-align: center;">
+                <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto;"/>
+                <h4 style="color:#494c4e; margin: 5px 0;">{row['TÍTULO']}</h4>
+                <p style="margin: 5px 0;"><strong>Autor:</strong> {row['AUTOR']}</p>
+                <p style="margin: 5px 0;"><strong>{row['DISCIPLINA']} | {row['SÉRIE']} | Volume: {row['VOLUME/PROJETO']}</strong></p>
+                <p style="margin: 5px 0;"><strong>Disponível:</strong> {row['DISPONÍVEL NA ÁRVORE']}</p>
+        
                 """
 
                 # Adicionar sugestão de livro, se houver
