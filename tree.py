@@ -2,10 +2,14 @@ import streamlit as st
 import pandas as pd
 
 def app():
-    st.image('logo-arvore.svg')
+    #st.image('logo-arvore.svg')
+    st.logo('logo.png')
     st.header('Mapeamento de Livros Árvore & AZ')
     st.subheader('Explore uma coleção completa de livros mapeados com o seu sistema de ensino AZ.')
+    
     st.divider()
+    
+ 
 
     df = pd.read_excel('dados.xlsx', sheet_name='TODOS OS VOLUMES')
 
@@ -13,13 +17,13 @@ def app():
 
     # Filtro composto por TÍTULO (multi-seleção)
     titulo_input = col1.multiselect(
-        "Selecione um ou mais TÍTULOS:", 
+        "Selecione um ou mais TÍTULOS:", placeholder="Escolha uma opção",
         options=sorted(df['TÍTULO'].unique())  # Ordena os títulos
     )
 
     # Filtro composto por AUTOR (multi-seleção) - desabilitado se o filtro de TÍTULO estiver ativo
     volume_input = col2.multiselect(
-        "Selecione um ou mais Volumes:", 
+        "Selecione um ou mais Volumes:", placeholder="Escolha uma opção",
         options=sorted(df['VOLUME/PROJETO'].unique())
     ) if not titulo_input else col2.selectbox(
         "Filtro de VOLUME/PROJETO desabilitado devido à seleção de TÍTULO",
@@ -30,16 +34,16 @@ def app():
 
     # Filtro composto por DISCIPLINA (multi-seleção)
     disciplina_input = col3.multiselect(
-        "Selecione uma ou mais DISCIPLINAS:", 
+        "Selecione uma ou mais DISCIPLINAS:", placeholder="Escolha uma opção",
         options=sorted(df['DISCIPLINA'].unique())  # Ordena as disciplinas
     ) if not (titulo_input or volume_input) else col3.selectbox(
-        "Filtro de DISCIPLINA desabilitado devido à seleção de TÍTULO ou VOLUME/PROJETO",
+        "Filtro de DISCIPLINA desabilitado devido à seleção de TÍTULO ou VOLUME/PROJETO", 
         options=[""], disabled=True
     )
 
     # Filtro composto por SÉRIE (multi-seleção)
     serie_input = col4.multiselect(
-        "Selecione uma ou mais SÉRIES:", 
+        "Selecione uma ou mais SÉRIES:", placeholder="Escolha uma opção",
         options=df['SÉRIE'].unique()
     ) if not (titulo_input or volume_input) else col4.selectbox(
         "Filtro de SÉRIE desabilitado devido à seleção de TÍTULO ou VOLUME/PROJETO",
@@ -65,7 +69,8 @@ def app():
     total_pages = len(df) // results_per_page + (1 if len(df) % results_per_page > 0 else 0)
 
     # Criar um seletor de página
-    selected_page = st.selectbox('Selecione a página:', range(1, total_pages + 1))
+    col1, col2, col3, col4 = st.columns(4)
+    selected_page = col1.selectbox('Selecione a página:', range(1, total_pages + 1))
 
     # Calcular o índice inicial e final dos resultados da página selecionada
     start_idx = (selected_page - 1) * results_per_page
@@ -84,13 +89,12 @@ def app():
             with cols[index % num_cols]:  # Distribui os cards nas colunas criadas
                 # Construir o HTML do card
                 card_html = f"""
-                <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-bottom: 10px; height: 700px;">
-                    <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto; text-align:center"/>
-                    <h3>{row['TÍTULO']}</h3>
+                <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-bottom: 10px; height: 620px; text-align: center;">
+                    <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto;"/>
+                    <p></p>
+                    <h4 style="color:#494c4e; ">{row['TÍTULO']}</h4>
                     <p><strong>Autor:</strong> {row['AUTOR']}</p>
-                    <p><strong>Disciplina:</strong> {row['DISCIPLINA']}</p>
-                    <p><strong>Série:</strong> {row['SÉRIE']}</p>
-                    <p><strong>Volume:</strong> {row['VOLUME/PROJETO']}</p>
+                    <p><strong> {row['DISCIPLINA']} | {row['SÉRIE']}<strong> | Volume:{row['VOLUME/PROJETO']}</strong> </p>
                     <p><strong>Disponível:</strong> {row['DISPONÍVEL NA ÁRVORE']}</p>
                 """
 
@@ -111,8 +115,7 @@ def app():
                 
                 link = row['LINK DO LIVRO']
                 button_label = f"{row['NOME DO BOTÃO']}"
-                card_html += f'<a href="{link}" target="_blank"><button style="background-color: {cor}; color: {texto_cor}; padding: 10px 20px; border: none; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; border-radius: 4px;">{button_label}</button></a>'
-                
+                card_html += f'<div style="text-align: center;"><a href="{link}" target="_blank"><button style="background-color: {cor}; color: {texto_cor}; padding: 10px 20px; border: none; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; border-radius: 4px;">{button_label}</button></a></div>'
                 # Fechar a div
                 card_html += "</div>"
 
@@ -121,6 +124,9 @@ def app():
                 st.markdown("")
     else:
         st.markdown("Nenhum resultado encontrado para os filtros aplicados.")
+
+
+# * optional kwarg unsafe_allow_html = True
 
 if __name__ == "__main__":
     app()
