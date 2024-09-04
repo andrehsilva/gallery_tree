@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-from streamlit_option_menu import option_menu
-import io
 
 def app():
     st.image('logo-arvore.svg')
@@ -60,19 +58,34 @@ def app():
 
     st.divider()
 
+    # Definir o número de resultados por página
+    results_per_page = 16
+
+    # Calcular o número total de páginas
+    total_pages = len(df) // results_per_page + (1 if len(df) % results_per_page > 0 else 0)
+
+    # Criar um seletor de página
+    selected_page = st.selectbox('Selecione a página:', range(1, total_pages + 1))
+
+    # Calcular o índice inicial e final dos resultados da página selecionada
+    start_idx = (selected_page - 1) * results_per_page
+    end_idx = start_idx + results_per_page
+
+    # Filtrar os dados para a página selecionada
+    page_data = df.iloc[start_idx:end_idx]
+
     # Exibir os resultados em formato de card
-    if not df.empty:
-        # Determinar o número de colunas necessário baseado no número de resultados
-        num_results = len(df)
+    if not page_data.empty:
+        num_results = len(page_data)
         num_cols = min(4, num_results)  # Limita a 4 colunas no máximo
         cols = st.columns(num_cols)  # Cria o layout dinâmico de colunas
         
-        for index, row in df.iterrows():
+        for index, row in page_data.iterrows():
             with cols[index % num_cols]:  # Distribui os cards nas colunas criadas
                 # Construir o HTML do card
                 card_html = f"""
-                <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                    <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto;"/>
+                <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-bottom: 10px; height: 700px;">
+                    <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto; text-align:center"/>
                     <h3>{row['TÍTULO']}</h3>
                     <p><strong>Autor:</strong> {row['AUTOR']}</p>
                     <p><strong>Disciplina:</strong> {row['DISCIPLINA']}</p>
