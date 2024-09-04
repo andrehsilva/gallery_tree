@@ -37,10 +37,10 @@ st.header('Mapeamento de Livros Árvore & AZ')
 st.subheader('Explore uma coleção completa de livros mapeados com o seu sistema de ensino AZ.')
 
 
-#st.divider()
+st.divider()
 
 df = pd.read_excel('dados.xlsx', sheet_name='TODOS OS VOLUMES')
-col1, col2 = st.columns(2)
+col1, col2, col3, col4 = st.columns(4)
 # Filtro composto por TÍTULO (multi-seleção)
 titulo_input = col1.multiselect(
     "Selecione um ou mais títulos:", placeholder="Escolha uma opção",
@@ -54,7 +54,6 @@ volume_input = col2.multiselect(
     "Filtro de VOLUME/PROJETO desabilitado devido à seleção de TÍTULO",
     options=[""], disabled=True
 )
-col3, col4 = st.columns(2)
 # Filtro composto por DISCIPLINA (multi-seleção)
 disciplina_input = col3.multiselect(
     "Selecione uma ou mais disciplinas:", placeholder="Escolha uma opção",
@@ -80,7 +79,9 @@ if disciplina_input:
     df = df[df['DISCIPLINA'].isin(disciplina_input)]
 if serie_input:
     df = df[df['SÉRIE'].isin(serie_input)]
+
 st.divider()
+
 # Definir o número de resultados por página
 results_per_page = 16
 # Calcular o número total de páginas
