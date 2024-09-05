@@ -115,10 +115,10 @@ if not page_data.empty:
         with cols[index % num_cols]:  # Distribui os cards nas colunas criadas
             # Construir o HTML do card
             card_html = f"""
-            <div style="border: 1px solid #ddd; padding: 5px; border-radius: 5px; margin-bottom: 2px; margin-top: 2px; height: 550px; text-align: center;">
+            <div style="border: 1px solid #ddd; padding: 5px; border-radius: 5px; margin-bottom: 2px; margin-top: 2px; height: 580px; text-align: center;">
             <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto;"/>
             <h4 style="color:#494c4e; margin: 5px 0;">{row['NOME']}</h4>
-            <!--p style="margin: 5px 0;"><strong>Autor:</strong> {row['AUTOR']}</p-->
+            <p style="margin: 5px 0;"><strong>Autor:</strong> {row['AUTOR']}</p>
             <p style="margin: 5px 0;"><strong>{row['DISCIPLINA']} | {row['SÉRIE']} | Volume: {row['VOLUME/PROJETO']}</strong></p>
             <!--p style="margin: 5px 0;"><strong>Disponível:</strong> {row['DISPONÍVEL NA ÁRVORE']}</p-->
             """
