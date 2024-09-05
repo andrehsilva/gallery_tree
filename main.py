@@ -99,7 +99,7 @@ page_data = df.iloc[start_idx:end_idx]
 
 # Exibir uma mensagem de aviso antes dos resultados, se o título pesquisado não for encontrado
 if titulo_input and not df[df['TÍTULO'].isin(titulo_input)].empty:
-    sugestoes = df['SUGESTÃO DE LIVRO'].dropna().unique()
+    sugestoes = df['NOME'].dropna().unique()
     if len(sugestoes) > 0:
         st.info(f'Você pesquisou por: "{", ".join(titulo_input)}". \n\nSugerimos o(s) livro(s): {", ".join(sugestoes)}')
 
