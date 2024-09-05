@@ -124,7 +124,7 @@ if not page_data.empty:
             """
             # Adicionar sugestão de livro, se houver
             if pd.notna(row['SUGESTÃO DE LIVRO']) and row['SUGESTÃO DE LIVRO'].strip():
-                card_html += f"<p><strong>Título original:</strong> {row['TÍTULO']}</p>"
+                card_html += f"<p><strong>Proposta de leitura original:</strong> {row['TÍTULO']}</p>"
             # Adicionar botão com o link do livro
             if row['DISPONÍVEL NA ÁRVORE'] == 'Sim':
                 cor = "#45d0c1"   
