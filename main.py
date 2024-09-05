@@ -118,14 +118,14 @@ if not page_data.empty:
             <div style="border: 1px solid #ddd; padding: 5px; border-radius: 5px; margin-bottom: 2px; margin-top: 2px; height: 580px; text-align: center;">
             <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto;"/>
             <h4 style="color:#494c4e; margin: 5px 0;">{row['NOME']}</h4>
-            <p style='margin: 5px 0;'><strong>Autor:</strong> {row['AUTOR']}</p>
+            <!--p style='margin: 5px 0;'><strong>Autor:</strong> {row['AUTOR']}</p-->
             <p style="margin: 5px 0;"><strong>{row['DISCIPLINA']} | {row['SÉRIE']} | Volume: {row['VOLUME/PROJETO']}</strong></p>
             <!--p style="margin: 5px 0;"><strong>Disponível:</strong> {row['DISPONÍVEL NA ÁRVORE']}</p-->
             """
             # Adicionar sugestão de livro, se houver
             if pd.notna(row['SUGESTÃO DE LIVRO']) and row['SUGESTÃO DE LIVRO'].strip():
                 card_html += f"<p style='margin: 5px 0;'><strong>Proposta de leitura original:</strong> {row['TÍTULO']}</p>"
-                #card_html += f"<p style='margin: 5px 0;'><strong>Autor da proposta de leitura:</strong> {row['AUTOR']}</p>"
+                card_html += f"<p style='margin: 5px 0;'><strong>Autor da proposta de leitura:</strong> {row['AUTOR']}</p>"
             # Adicionar botão com o link do livro
             if row['DISPONÍVEL NA ÁRVORE'] == 'Sim':
                 cor = "#45d0c1"   
