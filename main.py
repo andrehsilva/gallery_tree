@@ -82,6 +82,8 @@ if serie_input:
 
 st.divider()
 
+
+
 # Definir o número de resultados por página
 results_per_page = 16
 # Calcular o número total de páginas
@@ -94,6 +96,15 @@ start_idx = (selected_page - 1) * results_per_page
 end_idx = start_idx + results_per_page
 # Filtrar os dados para a página selecionada
 page_data = df.iloc[start_idx:end_idx]
+
+# Exibir uma mensagem de aviso antes dos resultados, se o título pesquisado não for encontrado
+if titulo_input and not df[df['TÍTULO'].isin(titulo_input)].empty:
+    sugestoes = df['SUGESTÃO DE LIVRO'].dropna().unique()
+    if len(sugestoes) > 0:
+        st.info(f'Você pesquisou por: "{", ".join(titulo_input)}". \n\nSugerimos o(s) livro(s): {", ".join(sugestoes)}')
+
+
+
 # Exibir os resultados em formato de card
 if not page_data.empty:
     num_results = len(page_data)
@@ -104,16 +115,16 @@ if not page_data.empty:
         with cols[index % num_cols]:  # Distribui os cards nas colunas criadas
             # Construir o HTML do card
             card_html = f"""
-            <div style="border: 1px solid #ddd; padding: 5px; border-radius: 5px; margin-bottom: 2px; margin-top: 2px; height: 620px; text-align: center;">
+            <div style="border: 1px solid #ddd; padding: 5px; border-radius: 5px; margin-bottom: 2px; margin-top: 2px; height: 550px; text-align: center;">
             <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto;"/>
-            <h4 style="color:#494c4e; margin: 5px 0;">{row['TÍTULO']}</h4>
+            <h4 style="color:#494c4e; margin: 5px 0;">{row['NOME']}</h4>
             <!--p style="margin: 5px 0;"><strong>Autor:</strong> {row['AUTOR']}</p-->
             <p style="margin: 5px 0;"><strong>{row['DISCIPLINA']} | {row['SÉRIE']} | Volume: {row['VOLUME/PROJETO']}</strong></p>
-            <p style="margin: 5px 0;"><strong>Disponível:</strong> {row['DISPONÍVEL NA ÁRVORE']}</p>
+            <!--p style="margin: 5px 0;"><strong>Disponível:</strong> {row['DISPONÍVEL NA ÁRVORE']}</p-->
             """
             # Adicionar sugestão de livro, se houver
             if pd.notna(row['SUGESTÃO DE LIVRO']) and row['SUGESTÃO DE LIVRO'].strip():
-                card_html += f"<p><strong>Sugestão:</strong> {row['SUGESTÃO DE LIVRO']}</p>"
+                card_html += f"<p><strong>Título original:</strong> {row['TÍTULO']}</p>"
             # Adicionar botão com o link do livro
             if row['DISPONÍVEL NA ÁRVORE'] == 'Sim':
                 cor = "#45d0c1"   
