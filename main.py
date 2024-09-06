@@ -103,6 +103,7 @@ page_data = df.iloc[start_idx:end_idx]
 # Continuar com a exibição dos cards
 # Exibir os resultados em formato de card
 
+
 if not page_data.empty:
     num_results = len(page_data)
     num_cols = min(4, num_results)  # Limita a 4 colunas no máximo
@@ -113,6 +114,8 @@ if not page_data.empty:
         
         for j, row in enumerate(page_data.iloc[i:i+cols_per_row].iterrows()):
             with cols[j]:  # Distribui os cards nas colunas criadas
+                # Definir um valor padrão para a cor
+                #cor = "gray"
                 
                 # Construir o HTML do card
                 card_html = f"""
@@ -126,7 +129,7 @@ if not page_data.empty:
                     card_html += f"<div style='background-color: #b36848; border: 1px solid #b36848; color: #ffffff; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>Sugestão</strong></div>"
 
                 if row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar obra indicada no material AZ':
-                    card_html += f"<div style='background-color: #fdc311; border: 1px solid #fdc311; color: #000000; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>📗 Obra no AZ</strong></div>"
+                    card_html += f"<div style='background-color: #fdc311; border: 1px solid #fdc311; color: #000000; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>Indisponível</strong></div>"
 
                 # Adicionar a imagem e as demais informações do card
                 card_html += f"""
@@ -136,15 +139,17 @@ if not page_data.empty:
                 """
                 
                 # Adicionar proposta de leitura original, se houver
-                if pd.notna(row[1]['TÍTULO']) and row[1]['TÍTULO'].strip():
-                    card_html += f"<p style='margin: 5px 0;'><strong>Proposta de leitura original:</strong> {row[1]['TÍTULO']}</p>"
-                    card_html += f"<p style='margin: 5px 0;'><strong>Autor da proposta de leitura:</strong> {row[1]['AUTOR']}</p>"
+                #if pd.notna(row[1]['TÍTULO']) and row[1]['TÍTULO'].strip():
+                    
+                    #card_html += f"<p style='margin: 5px 0;'><strong>Autor:</strong> {row[1]['AUTOR']}</p>"
 
                 # Adicionar botão com o link do livro
                 if row[1]['DISPONÍVEL NA ÁRVORE'] == 'Sim':
+                    card_html += f"<p style='margin: 5px 0;'><strong>Autor:</strong> {row[1]['AUTOR']}</p>"
                     cor = "#45d0c1"   
                     texto_cor = "white"
                 elif row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar sugestão':
+                    card_html += f"<p style='margin: 5px 0;'><strong>Proposta de leitura original:</strong> {row[1]['TÍTULO']}</p>"
                     cor = "#b36848"
                     texto_cor = "white"
                 elif row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar obra indicada no material AZ':
