@@ -80,70 +80,86 @@ if disciplina_input:
 if serie_input:
     df = df[df['SÉRIE'].isin(serie_input)]
 
-st.divider()
+# Aplicar a ordenação ANTES do paginamento
+categoria_ordem = pd.Categorical(df['DISPONÍVEL NA ÁRVORE'], 
+                                 categories=["Sim", "Não, utilizar sugestão", "Não, utilizar obra indicada no material AZ"],
+                                 ordered=True)
+df = df.sort_values(by='DISPONÍVEL NA ÁRVORE', key=lambda col: categoria_ordem)
 
-
-
-# Definir o número de resultados por página
+# Paginamento
 results_per_page = 16
-# Calcular o número total de páginas
 total_pages = len(df) // results_per_page + (1 if len(df) % results_per_page > 0 else 0)
-# Criar um seletor de página
+
 col1, col2, col3, col4 = st.columns(4)
 selected_page = col1.selectbox('Selecione a página:', range(1, total_pages + 1))
-# Calcular o índice inicial e final dos resultados da página selecionada
+
 start_idx = (selected_page - 1) * results_per_page
 end_idx = start_idx + results_per_page
-# Filtrar os dados para a página selecionada
+
+# Aplicar o paginamento ao dataframe filtrado e ordenado
 page_data = df.iloc[start_idx:end_idx]
 
-# Exibir uma mensagem de aviso antes dos resultados, se o título pesquisado não for encontrado
-if titulo_input and not df[df['TÍTULO'].isin(titulo_input)].empty:
-    sugestoes = df['NOME'].dropna().unique()
-    if len(sugestoes) > 0:
-        st.info(f'Você pesquisou por: "{", ".join(titulo_input)}". \n\nSugerimos o(s) livro(s): {", ".join(sugestoes)}')
 
-
-
+# Continuar com a exibição dos cards
 # Exibir os resultados em formato de card
+
 if not page_data.empty:
     num_results = len(page_data)
     num_cols = min(4, num_results)  # Limita a 4 colunas no máximo
-    cols = st.columns(num_cols)  # Cria o layout dinâmico de colunas
+    cols_per_row = 4  # Definir o número máximo de colunas por linha
     
-    for index, row in page_data.iterrows():
-        with cols[index % num_cols]:  # Distribui os cards nas colunas criadas
-            # Construir o HTML do card
-            card_html = f"""
-            <div style="border: 1px solid #ddd; padding: 5px; border-radius: 5px; margin-bottom: 2px; margin-top: 2px; height: 580px; text-align: center;">
-            <img src="{row['LINK DA IMAGEM']}" style="width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto;"/>
-            <h4 style="color:#494c4e; margin: 5px 0;">{row['NOME']}</h4>
-            <!--p style='margin: 5px 0;'><strong>Autor:</strong> {row['AUTOR']}</p-->
-            <p style="margin: 5px 0;"><strong>{row['DISCIPLINA']} | {row['SÉRIE']} | Volume: {row['VOLUME/PROJETO']}</strong></p>
-            <!--p style="margin: 5px 0;"><strong>Disponível:</strong> {row['DISPONÍVEL NA ÁRVORE']}</p-->
-            """
-            # Adicionar sugestão de livro, se houver
-            if pd.notna(row['SUGESTÃO DE LIVRO']) and row['SUGESTÃO DE LIVRO'].strip():
-                card_html += f"<p style='margin: 5px 0;'><strong>Proposta de leitura original:</strong> {row['TÍTULO']}</p>"
-                card_html += f"<p style='margin: 5px 0;'><strong>Autor da proposta de leitura:</strong> {row['AUTOR']}</p>"
-            # Adicionar botão com o link do livro
-            if row['DISPONÍVEL NA ÁRVORE'] == 'Sim':
-                cor = "#45d0c1"   
-                texto_cor = "white"
-            elif row['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar sugestão':
-                cor = "#b36848"
-                texto_cor = "white"
-            elif row['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar obra indicada no material AZ':
-                cor = "#fdc311"
-                texto_cor = "black"
-            
-            link = row['LINK DO LIVRO']
-            button_label = f"{row['NOME DO BOTÃO']}"
-            card_html += f'<div style="text-align: center;"><a href="{link}" target="_blank"><button style="background-color: {cor}; color: {texto_cor}; padding: 10px 20px; border: none; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; border-radius: 4px;">{button_label}</button></a></div>'
-            # Fechar a div
-            card_html += "</div>"
-            # Renderizar o HTML no Streamlit
-            st.markdown(card_html, unsafe_allow_html=True)
-            st.markdown("")
+    for i in range(0, num_results, cols_per_row):
+        cols = st.columns(min(cols_per_row, num_results - i))  # Ajustar o número de colunas dinamicamente
+        
+        for j, row in enumerate(page_data.iloc[i:i+cols_per_row].iterrows()):
+            with cols[j]:  # Distribui os cards nas colunas criadas
+                
+                # Construir o HTML do card
+                card_html = f"""
+                <div style="border: 1px solid #ddd; padding: 0px; border-radius: 5px; margin-bottom: 2px; margin-top: 2px; height: 620px; text-align: center;">
+                """
+                if row[1]['DISPONÍVEL NA ÁRVORE'] == 'Sim':
+                    card_html += f"<div style='background-color: #45d0c1; border: 1px solid #45d0c1; color: #ffffff; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>📗 Livro Disponível</strong></div>"
+
+                # Adicionar sugestão de livro, se houver
+                if pd.notna(row[1]['SUGESTÃO DE LIVRO']) and row[1]['SUGESTÃO DE LIVRO'].strip():
+                    card_html += f"<div style='background-color: #b36848; border: 1px solid #b36848; color: #ffffff; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>Sugestão</strong></div>"
+
+                if row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar obra indicada no material AZ':
+                    card_html += f"<div style='background-color: #fdc311; border: 1px solid #fdc311; color: #000000; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>📗 Obra no AZ</strong></div>"
+
+                # Adicionar a imagem e as demais informações do card
+                card_html += f"""
+                <img src="{row[1]['LINK DA IMAGEM']}" style="width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto;"/>
+                <h4 style="color:#494c4e; margin: 5px 0;">{row[1]['NOME']}</h4>
+                <p style="margin: 5px 0;"><strong>{row[1]['DISCIPLINA']} | {row[1]['SÉRIE']} | Volume: {row[1]['VOLUME/PROJETO']}</strong></p>
+                """
+                
+                # Adicionar proposta de leitura original, se houver
+                if pd.notna(row[1]['TÍTULO']) and row[1]['TÍTULO'].strip():
+                    card_html += f"<p style='margin: 5px 0;'><strong>Proposta de leitura original:</strong> {row[1]['TÍTULO']}</p>"
+                    card_html += f"<p style='margin: 5px 0;'><strong>Autor da proposta de leitura:</strong> {row[1]['AUTOR']}</p>"
+
+                # Adicionar botão com o link do livro
+                if row[1]['DISPONÍVEL NA ÁRVORE'] == 'Sim':
+                    cor = "#45d0c1"   
+                    texto_cor = "white"
+                elif row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar sugestão':
+                    cor = "#b36848"
+                    texto_cor = "white"
+                elif row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar obra indicada no material AZ':
+                    cor = "#fdc311"
+                    texto_cor = "black"
+                
+                link = row[1]['LINK DO LIVRO']
+                button_label = f"{row[1]['NOME DO BOTÃO']}"
+                card_html += f'<div style="text-align: center;"><a href="{link}" target="_blank"><button style="background-color: {cor}; color: {texto_cor}; padding: 10px 20px; border: none; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; border-radius: 4px;">{button_label}</button></a></div>'
+                
+                # Fechar a div do card
+                card_html += "</div>"
+                
+                # Renderizar o HTML no Streamlit
+                st.markdown(card_html, unsafe_allow_html=True)
+                st.markdown("")
 else:
     st.markdown("Nenhum resultado encontrado para os filtros aplicados.")
