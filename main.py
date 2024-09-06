@@ -129,7 +129,7 @@ if not page_data.empty:
                     card_html += f"<div style='background-color: #b36848; border: 1px solid #b36848; color: #ffffff; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>Sugestão</strong></div>"
 
                 if row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar obra indicada no material AZ':
-                    card_html += f"<div style='background-color: #fdc311; border: 1px solid #fdc311; color: #000000; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>Indisponível</strong></div>"
+                    card_html += f"<div style='background-color: #fdc311; border: 1px solid #fdc311; color: #000000; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>Indisponível na Árvore</strong></div>"
 
                 # Adicionar a imagem e as demais informações do card
                 card_html += f"""
