@@ -68,7 +68,8 @@ Certifique-se de ter instalado:
 
 ## Capturas de Tela
 ### Página Inicial
-![Exemplo da galeria de livros](assets/screenshot.png)
+![image](https://github.com/user-attachments/assets/e8724ae6-2983-454b-8bee-50b11cdf75d8)
+
 
 ## Próximas Melhorias
 - Adicionar novos filtros por autor e editora.
