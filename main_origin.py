@@ -4,7 +4,7 @@ from streamlit_modal import Modal
 
 import io
 
-st.set_page_config(page_title="Exemplo de galeria",page_icon="📚",layout="wide")
+st.set_page_config(page_title="Árvore de Livros & AZ",page_icon="📚",layout="wide")
 
 st.markdown("""
     <style>
@@ -23,18 +23,18 @@ st.markdown("""
 st.logo('logo.png')
 col1, col2, col3, col4 = st.columns(4)
 # Cria um modal com o título
-modal = Modal(key="video_modal", title="Exemplo de galerias de livros")
+modal = Modal(key="video_modal", title="Aprenda a encontrar livros mapeados na Árvore & AZ")
 
 # Botão para abrir o modal
-if col1.button("**Exemplo de modal explicativo**"):
+if col1.button("**Clique aqui para aprender!**"):
     modal.open()
 
 # Conteúdo do modal
 if modal.is_open():
     with modal.container():
-        st.video("teste.mp4")
-st.header('Exemplo de página de galeria!')
-st.subheader('Explore uma coleção completa de livros de testes.')
+        st.video("arvore.mp4")
+st.header('Mapeamento de Livros Árvore & AZ')
+st.subheader('Explore uma coleção completa de livros mapeados com o seu sistema de ensino AZ.')
 
 
 st.divider()
@@ -81,10 +81,10 @@ if serie_input:
     df = df[df['SÉRIE'].isin(serie_input)]
 
 # Aplicar a ordenação ANTES do paginamento
-categoria_ordem = pd.Categorical(df['DISPONÍVEL'], 
-                                 categories=["Sim", "Não, utilizar sugestão"],
+categoria_ordem = pd.Categorical(df['DISPONÍVEL NA ÁRVORE'], 
+                                 categories=["Sim", "Não, utilizar sugestão", "Não, utilizar obra indicada no material AZ"],
                                  ordered=True)
-df = df.sort_values(by='DISPONÍVEL', key=lambda col: categoria_ordem)
+df = df.sort_values(by='DISPONÍVEL NA ÁRVORE', key=lambda col: categoria_ordem)
 
 # Paginamento
 results_per_page = 16
@@ -121,14 +121,14 @@ if not page_data.empty:
                 card_html = f"""
                 <div style="border: 1px solid #ddd; padding: 0px; border-radius: 5px; margin-bottom: 2px; margin-top: 2px; height: 620px; text-align: center;">
                 """
-                if row[1]['DISPONÍVEL'] == 'Sim':
+                if row[1]['DISPONÍVEL NA ÁRVORE'] == 'Sim':
                     card_html += f"<div style='background-color: #45d0c1; border: 1px solid #45d0c1; color: #ffffff; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>📗 Livro Disponível</strong></div>"
 
                 # Adicionar sugestão de livro, se houver
                 if pd.notna(row[1]['SUGESTÃO DE LIVRO']) and row[1]['SUGESTÃO DE LIVRO'].strip():
                     card_html += f"<div style='background-color: #b36848; border: 1px solid #b36848; color: #ffffff; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>Sugestão</strong></div>"
 
-                if row[1]['DISPONÍVEL'] == 'Não, utilizar obra indicada no material AZ':
+                if row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar obra indicada no material AZ':
                     card_html += f"<div style='background-color: #fdc311; border: 1px solid #fdc311; color: #000000; padding: 1px; border-radius: 5px 5px 0px 0px; margin-bottom: 5px;'><strong>Indisponível na Árvore</strong></div>"
 
                 # Adicionar a imagem e as demais informações do card
@@ -144,15 +144,17 @@ if not page_data.empty:
                     #card_html += f"<p style='margin: 5px 0;'><strong>Autor:</strong> {row[1]['AUTOR']}</p>"
 
                 # Adicionar botão com o link do livro
-                if row[1]['DISPONÍVEL'] == 'Sim':
+                if row[1]['DISPONÍVEL NA ÁRVORE'] == 'Sim':
                     card_html += f"<p style='margin: 5px 0;'><strong>Autor:</strong> {row[1]['AUTOR']}</p>"
                     cor = "#45d0c1"   
                     texto_cor = "white"
-                elif row[1]['DISPONÍVEL'] == 'Não, utilizar sugestão':
+                elif row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar sugestão':
                     card_html += f"<p style='margin: 5px 0;'><strong>Proposta de leitura original:</strong> {row[1]['TÍTULO']}</p>"
                     cor = "#b36848"
                     texto_cor = "white"
-
+                elif row[1]['DISPONÍVEL NA ÁRVORE'] == 'Não, utilizar obra indicada no material AZ':
+                    cor = "#fdc311"
+                    texto_cor = "black"
                 
                 link = row[1]['LINK DO LIVRO']
                 button_label = f"{row[1]['NOME DO BOTÃO']}"
